@@ -2,8 +2,8 @@ const MEMORY_SIZE: usize = 65536; /* 65536 locations */
 
 struct VM {
     memory: [u16; MEMORY_SIZE],
-    registers: [u16; 10], /* 10 registers: R0-R7, COND and COUNT */
-    pc: u16,              /* program counter */
+    registers: [u16; 10],
+    pc: u16,
 }
 
 impl VM {
