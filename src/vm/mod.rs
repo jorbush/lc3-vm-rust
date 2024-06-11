@@ -110,10 +110,30 @@ impl VM {
     }
 
     fn add(&mut self, instr: u16) {
-        todo!(
-            "{}",
-            format!("Instruction ADD ({:#x}) not implemented yet.", instr)
-        );
+        /*
+            15 14 13 12 | 11 10 9 | 8 7 6 | 5 | 4 3 2 1 0
+                0 0 0 1 |   DR    |  SR1  | 0 | 0 0 | SR2
+                0 0 0 1 |   DR    |  SR1  | 1 |   imm5
+        */
+        /* extract destination register (DR) */
+        let r0 = (instr >> 9) & 0x7;
+        /* extract first operand (SR1) */
+        let r1 = (instr >> 6) & 0x7;
+        /* whether we are in immediate mode */
+        let imm_flag = (instr >> 5) & 0x1;
+
+        if imm_flag != 0 {
+            // immediate mode
+            let imm5 = Self::sign_extend(instr & 0x1F, 5);
+            self.registers[r0 as usize] = self.registers[r1 as usize].wrapping_add(imm5);
+        } else {
+            // register mode
+            let r2 = instr & 0x7;
+            self.registers[r0 as usize] =
+                self.registers[r1 as usize].wrapping_add(self.registers[r2 as usize]);
+        }
+
+        self.update_flags(r0 as usize);
     }
 
     fn and(&mut self, instr: u16) {
