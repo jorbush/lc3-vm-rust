@@ -12,4 +12,13 @@ fn main() {
     }
 
     let mut vm = VM::new();
+
+    for arg in &args[1..] {
+        if let Err(e) = vm.load_image(arg) {
+            eprintln!("failed to load image: {}: {}", arg, e);
+            std::process::exit(1);
+        }
+    }
+
+    vm.run();
 }

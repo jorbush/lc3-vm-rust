@@ -33,10 +33,6 @@ impl Register {
         }
     }
 
-    pub fn to_u16(&self) -> u16 {
-        *self as u16
-    }
-
     pub fn to_usize(&self) -> usize {
         *self as usize
     }
