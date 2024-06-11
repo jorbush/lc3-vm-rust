@@ -28,14 +28,14 @@ impl VM {
             running: true,
         };
         /* since exactly one condition flag should be set at any given time, set the Z flag */
-        vm.registers[Register::Cond.to_usize()] = ConditionFlag::Zro.to_u16();
+        vm.registers[usize::from(Register::Cond)] = ConditionFlag::Zro.to_u16();
         /* set the PC to starting position */
-        vm.registers[Register::PC.to_usize()] = PC_START;
+        vm.registers[usize::from(Register::PC)] = PC_START;
         vm
     }
 
     fn fetch(&self) -> u16 {
-        self.memory[self.registers[Register::PC.to_usize()] as usize]
+        self.memory[self.registers[usize::from(Register::PC)] as usize]
     }
 
     fn decode(instr: u16) -> OpCode {
@@ -65,7 +65,7 @@ impl VM {
     pub fn run(&mut self) {
         while self.running {
             let instr = self.fetch();
-            self.registers[Register::PC.to_usize()] += 1;
+            self.registers[usize::from(Register::PC)] += 1;
             let op = Self::decode(instr);
             self.execute(op, instr);
         }
