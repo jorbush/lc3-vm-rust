@@ -5,17 +5,21 @@ pub enum ConditionFlag {
     Neg = 1 << 2, /* N */
 }
 
-impl ConditionFlag {
-    pub fn from_u16(value: u16) -> Option<Self> {
-        match value {
-            1 => Some(ConditionFlag::Pos),
-            2 => Some(ConditionFlag::Zro),
-            4 => Some(ConditionFlag::Neg),
-            _ => None,
-        }
+impl From<ConditionFlag> for u16 {
+    fn from(val: ConditionFlag) -> Self {
+        val as u16
     }
+}
 
-    pub fn to_u16(self) -> u16 {
-        self as u16
+impl TryFrom<u16> for ConditionFlag {
+    type Error = &'static str;
+
+    fn try_from(value: u16) -> Result<Self, Self::Error> {
+        Ok(match value {
+            1 => Self::Pos,
+            2 => Self::Zro,
+            4 => Self::Neg,
+            _ => return Err("invalid condition flag"),
+        })
     }
 }

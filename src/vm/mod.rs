@@ -28,7 +28,7 @@ impl VM {
             running: true,
         };
         /* since exactly one condition flag should be set at any given time, set the Z flag */
-        vm.registers[usize::from(Register::Cond)] = ConditionFlag::Zro.to_u16();
+        vm.registers[usize::from(Register::Cond)] = ConditionFlag::Zro.into();
         /* set the PC to starting position */
         vm.registers[usize::from(Register::PC)] = PC_START;
         vm
@@ -89,58 +89,100 @@ impl VM {
     }
 
     fn add(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction ADD ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction ADD ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn and(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction AND ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction AND ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn not(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction NOT ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction NOT ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn br(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction BR ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction BR ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn jmp(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction JMP ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction JMP ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn jsr(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction JSR ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction JSR ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn ld(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction LD ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction LD ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn ldi(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction LDI ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction LDI ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn ldr(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction LDR ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction LDR ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn lea(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction LEA ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction LEA ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn st(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction ST ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction ST ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn sti(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction STI ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction STI ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn str(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction STR ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction STR ({:#x}) not implemented yet.", instr)
+        );
     }
 
     fn trap(&mut self, instr: u16) {
-        todo!("{}", format!("Instruction TRAP ({:#x}) not implemented yet.", instr));
+        todo!(
+            "{}",
+            format!("Instruction TRAP ({:#x}) not implemented yet.", instr)
+        );
     }
 }
