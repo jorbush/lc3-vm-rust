@@ -88,6 +88,16 @@ impl VM {
         Ok(())
     }
 
+    fn sign_extend(x: u16, bit_count: u16) -> u16 {
+        // if the leftmost bit is 1, then it's negative
+        if (x >> (bit_count - 1)) & 1 == 1 {
+            // set the leftmost bits to 1
+            x | (0xFFFF << bit_count)
+        } else {
+            x
+        }
+    }
+
     fn add(&mut self, instr: u16) {
         todo!(
             "{}",
