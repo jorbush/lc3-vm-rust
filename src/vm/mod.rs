@@ -38,9 +38,11 @@ impl VM {
         self.memory[self.registers[Register::PC.to_usize()] as usize]
     }
 
-    fn decode_and_execute(&mut self, instr: u16) {
-        let op = OpCode::from_u16(instr >> 12).unwrap_or(OpCode::Res);
+    fn decode(instr: u16) -> OpCode {
+        OpCode::from_u16(instr >> 12).unwrap_or(OpCode::Res)
+    }
 
+    fn execute(&mut self, op: OpCode, instr: u16) {
         match op {
             OpCode::Add => self.add(instr),
             OpCode::And => self.and(instr),
@@ -64,7 +66,8 @@ impl VM {
         while self.running {
             let instr = self.fetch();
             self.registers[Register::PC.to_usize()] += 1;
-            self.decode_and_execute(instr);
+            let op = Self::decode(instr);
+            self.execute(op, instr);
         }
     }
 
