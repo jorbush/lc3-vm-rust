@@ -20,30 +20,34 @@ pub(crate) enum OpCode {
     Trap,   /* execute trap */
 }
 
-impl OpCode {
-    pub fn from_u16(value: u16) -> Option<Self> {
-        match value {
-            0 => Some(OpCode::Br),
-            1 => Some(OpCode::Add),
-            2 => Some(OpCode::Ld),
-            3 => Some(OpCode::St),
-            4 => Some(OpCode::Jsr),
-            5 => Some(OpCode::And),
-            6 => Some(OpCode::Ldr),
-            7 => Some(OpCode::Str),
-            8 => Some(OpCode::Rti),
-            9 => Some(OpCode::Not),
-            10 => Some(OpCode::Ldi),
-            11 => Some(OpCode::Sti),
-            12 => Some(OpCode::Jmp),
-            13 => Some(OpCode::Res),
-            14 => Some(OpCode::Lea),
-            15 => Some(OpCode::Trap),
-            _ => None,
-        }
+impl From<OpCode> for u16 {
+    fn from(val: OpCode) -> Self {
+        val as u16
     }
+}
 
-    pub fn to_u16(&self) -> u16 {
-        *self as u16
+impl TryFrom<u16> for OpCode {
+    type Error = &'static str;
+
+    fn try_from(value: u16) -> Result<Self, Self::Error> {
+        Ok(match value {
+            0 => Self::Br,
+            1 => Self::Add,
+            2 => Self::Ld,
+            3 => Self::St,
+            4 => Self::Jsr,
+            5 => Self::And,
+            6 => Self::Ldr,
+            7 => Self::Str,
+            8 => Self::Rti,
+            9 => Self::Not,
+            10 => Self::Ldi,
+            11 => Self::Sti,
+            12 => Self::Jmp,
+            13 => Self::Res,
+            14 => Self::Lea,
+            15 => Self::Trap,
+            _ => return Err("invalid opcode"),
+        })
     }
 }

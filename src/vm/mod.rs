@@ -39,7 +39,7 @@ impl VM {
     }
 
     fn decode(instr: u16) -> OpCode {
-        OpCode::from_u16(instr >> 12).unwrap_or(OpCode::Res)
+        OpCode::try_from(instr >> 12).unwrap()
     }
 
     fn execute(&mut self, op: OpCode, instr: u16) {
@@ -89,45 +89,58 @@ impl VM {
     }
 
     fn add(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction ADD ({:#x}) not implemented yet.", instr));
     }
+
     fn and(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction AND ({:#x}) not implemented yet.", instr));
     }
+
     fn not(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction NOT ({:#x}) not implemented yet.", instr));
     }
+
     fn br(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction BR ({:#x}) not implemented yet.", instr));
     }
+
     fn jmp(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction JMP ({:#x}) not implemented yet.", instr));
     }
+
     fn jsr(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction JSR ({:#x}) not implemented yet.", instr));
     }
+
     fn ld(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction LD ({:#x}) not implemented yet.", instr));
     }
+
     fn ldi(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction LDI ({:#x}) not implemented yet.", instr));
     }
+
     fn ldr(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction LDR ({:#x}) not implemented yet.", instr));
     }
+
     fn lea(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction LEA ({:#x}) not implemented yet.", instr));
     }
+
     fn st(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction ST ({:#x}) not implemented yet.", instr));
     }
+
     fn sti(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction STI ({:#x}) not implemented yet.", instr));
     }
+
     fn str(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction STR ({:#x}) not implemented yet.", instr));
     }
+
     fn trap(&mut self, instr: u16) {
-        /* TODO */
+        todo!("{}", format!("Instruction TRAP ({:#x}) not implemented yet.", instr));
     }
 }
