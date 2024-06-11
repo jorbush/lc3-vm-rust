@@ -2,7 +2,7 @@
 
 #[derive(Debug, Clone, Copy)]
 enum Register {
-    R0 = 0,
+    R0 = 0, /* general purpose registers */
     R1,
     R2,
     R3,
@@ -10,8 +10,8 @@ enum Register {
     R5,
     R6,
     R7,
-    Cond,
-    Count
+    Cond, /* condition flag */
+    Count /* count register */
 }
 
 impl Register {
