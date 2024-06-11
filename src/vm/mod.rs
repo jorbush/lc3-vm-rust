@@ -88,32 +88,46 @@ impl VM {
         Ok(())
     }
 
-    fn add(&mut self, instr: u16) { /* TODO */
+    fn add(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn and(&mut self, instr: u16) { /* TODO */
+    fn and(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn not(&mut self, instr: u16) { /* TODO */
+    fn not(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn br(&mut self, instr: u16) { /* TODO */
+    fn br(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn jmp(&mut self, instr: u16) { /* TODO */
+    fn jmp(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn jsr(&mut self, instr: u16) { /* TODO */
+    fn jsr(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn ld(&mut self, instr: u16) { /* TODO */
+    fn ld(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn ldi(&mut self, instr: u16) { /* TODO */
+    fn ldi(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn ldr(&mut self, instr: u16) { /* TODO */
+    fn ldr(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn lea(&mut self, instr: u16) { /* TODO */
+    fn lea(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn st(&mut self, instr: u16) { /* TODO */
+    fn st(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn sti(&mut self, instr: u16) { /* TODO */
+    fn sti(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn str(&mut self, instr: u16) { /* TODO */
+    fn str(&mut self, instr: u16) {
+        /* TODO */
     }
-    fn trap(&mut self, instr: u16) { /* TODO */
+    fn trap(&mut self, instr: u16) {
+        /* TODO */
     }
 }
