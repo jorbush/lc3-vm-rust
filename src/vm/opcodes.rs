@@ -1,27 +1,27 @@
 // Module for the opcodes of the LC3
 
 #[derive(Debug, Clone, Copy)]
-enum OpCode {
-    BR = 0,  /* branch */
-    ADD,     /* add  */
-    LD,      /* load */
-    ST,      /* store */
-    JSR,     /* jump register */
-    AND,     /* bitwise and */
-    LDR,     /* load register */
-    STR,     /* store register */
-    RTI,     /* unused */
-    NOT,     /* bitwise not */
-    LDI,     /* load indirect */
-    STI,     /* store indirect */
-    JMP,     /* jump */
-    RES,     /* reserved (unused) */
-    LEA,     /* load effective address */
-    TRAP     /* execute trap */
+pub(crate) enum OpCode {
+    BR = 0, /* branch */
+    ADD,    /* add  */
+    LD,     /* load */
+    ST,     /* store */
+    JSR,    /* jump register */
+    AND,    /* bitwise and */
+    LDR,    /* load register */
+    STR,    /* store register */
+    RTI,    /* unused */
+    NOT,    /* bitwise not */
+    LDI,    /* load indirect */
+    STI,    /* store indirect */
+    JMP,    /* jump */
+    RES,    /* reserved (unused) */
+    LEA,    /* load effective address */
+    TRAP,   /* execute trap */
 }
 
 impl OpCode {
-    fn from_u16(value: u16) -> Option<Self> {
+    pub fn from_u16(value: u16) -> Option<Self> {
         match value {
             0 => Some(OpCode::BR),
             1 => Some(OpCode::ADD),
@@ -41,5 +41,9 @@ impl OpCode {
             15 => Some(OpCode::TRAP),
             _ => None,
         }
+    }
+
+    pub fn to_u16(&self) -> u16 {
+        *self as u16
     }
 }

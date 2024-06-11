@@ -1,7 +1,7 @@
 // Module for the registers of the LC3
 
 #[derive(Debug, Clone, Copy)]
-enum Register {
+pub enum Register {
     R0 = 0, /* general purpose registers */
     R1,
     R2,
@@ -10,12 +10,13 @@ enum Register {
     R5,
     R6,
     R7,
-    Cond, /* condition flag */
-    Count /* count register */
+    PC,    /* program counter */
+    Cond,  /* condition flag */
+    Count, /* count register */
 }
 
 impl Register {
-    fn from_u16(value: u16) -> Option<Self> {
+    pub fn from_u16(value: u16) -> Option<Self> {
         match value {
             0 => Some(Register::R0),
             1 => Some(Register::R1),
@@ -25,9 +26,18 @@ impl Register {
             5 => Some(Register::R5),
             6 => Some(Register::R6),
             7 => Some(Register::R7),
-            8 => Some(Register::Cond),
-            9 => Some(Register::Count),
+            8 => Some(Register::PC),
+            9 => Some(Register::Cond),
+            10 => Some(Register::Count),
             _ => None,
         }
+    }
+
+    pub fn to_u16(&self) -> u16 {
+        *self as u16
+    }
+
+    pub fn to_usize(&self) -> usize {
+        *self as usize
     }
 }
