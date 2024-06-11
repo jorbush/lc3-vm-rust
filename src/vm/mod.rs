@@ -98,6 +98,17 @@ impl VM {
         }
     }
 
+    fn update_flags(&mut self, reg_index: usize) {
+        if self.registers[reg_index] == 0 {
+            self.registers[usize::from(Register::Cond)] = ConditionFlag::Zro.into();
+        } else if self.registers[reg_index] >> 15 == 1 {
+            /* a 1 in the left-most bit indicates negative */
+            self.registers[usize::from(Register::Cond)] = ConditionFlag::Neg.into();
+        } else {
+            self.registers[usize::from(Register::Cond)] = ConditionFlag::Pos.into();
+        }
+    }
+
     fn add(&mut self, instr: u16) {
         todo!(
             "{}",
