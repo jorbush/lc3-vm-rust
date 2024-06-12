@@ -12,7 +12,7 @@ The LC-3 is a simple educational computer designed to teach the basics of comput
 
 ## Implemented Instructions
 
-| Instruction | OpCode (Binary)  | Description                                                         | Implemented  |
+| Instruction | OpCode           | Description                                                         | Implemented  |
 |-------------|------------------|---------------------------------------------------------------------|--------------|
 | BR          | 0000             | Performs a conditional branch based on the condition flags.         | ❌           |
 | ADD         | 0001             | Adds two values. Can use immediate mode or register mode.           | ✅           |
