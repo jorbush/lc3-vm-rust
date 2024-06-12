@@ -345,4 +345,40 @@ mod tests {
         println!("Registers after RES: {:?}", vm.registers);
         assert!(!vm.running);
     }
+
+    #[test]
+    fn test_and_register_mode() {
+        let mut vm = VM::new();
+        // Set initial values for the registers
+
+        vm.registers[1] = 0b1010; // SR1
+        vm.registers[2] = 0b1100; // SR2
+        println!("Registers before AND: {:?}", vm.registers);
+
+        // Create an AND instruction: DR = 0, SR1 = 1, SR2 = 2
+        // Binary representation: 0101 000 001 000 010
+        let instr: u16 = 0b0101_0000_0100_0010;
+
+        vm.and(instr);
+
+        println!("Registers after AND: {:?}", vm.registers);
+        assert_eq!(vm.registers[0], 0b1000);
+    }
+
+    #[test]
+    fn test_and_immediate_mode() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[1] = 0b1010; // SR1
+        println!("Registers before AND: {:?}", vm.registers);
+
+        // Create an AND instruction: DR = 0, SR1 = 1, imm5 = 0b1100
+        // Binary representation: 0101 000 001 1 01100
+        let instr: u16 = 0b0101_0000_0110_1100;
+
+        vm.and(instr);
+
+        println!("Registers after AND: {:?}", vm.registers);
+        assert_eq!(vm.registers[0], 0b1000);
+    }
 }
