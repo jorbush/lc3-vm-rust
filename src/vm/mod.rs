@@ -172,10 +172,14 @@ impl VM {
     }
 
     fn not(&mut self, instr: u16) {
-        todo!(
-            "{}",
-            format!("Instruction NOT ({:#x}) not implemented yet.", instr)
-        );
+        /*
+           15 14 13 12 | 11 10 9 | 8 7 6 | 5 | 4 3 2 1 0
+               1 0 0 1 |   DR    |  SR   | 1 | 1 1 1 1 1
+        */
+        let dr = (instr >> 9) & 0x7;
+        let sr = (instr >> 6) & 0x7;
+        self.registers[dr as usize] = !self.registers[sr as usize];
+        self.update_flags(dr as usize);
     }
 
     fn br(&mut self, instr: u16) {
