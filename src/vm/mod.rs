@@ -136,6 +136,26 @@ impl VM {
         self.update_flags(dr as usize);
     }
 
+    fn and(&mut self, instr: u16) {
+        /*
+            15 14 13 12 | 11 10 9 | 8 7 6 | 5 | 4 3 2 1 0
+                0 1 0 1 |   DR    |  SR1  | 0 | 0 0 | SR2
+                0 1 0 1 |   DR    |  SR1  | 1 |   imm5
+        */
+        let dr = (instr >> 9) & 0x7;
+        let sr1 = (instr >> 6) & 0x7;
+        let imm_flag = (instr >> 5) & 0x1;
+
+        if imm_flag != 0 {
+            let imm5 = Self::sign_extend(instr & 0x1F, 5);
+            self.registers[dr as usize] = self.registers[sr1 as usize] & imm5;
+        } else {
+            let sr2 = instr & 0x7;
+            self.registers[dr as usize] =
+                self.registers[sr1 as usize] & self.registers[sr2 as usize];
+        }
+    }
+
     fn ldi(&mut self, instr: u16) {
         /*
             15 14 13 12 | 11 10 9 | 8 7 6 | 5 4 3 2 1 0
@@ -149,13 +169,6 @@ impl VM {
         let effective_address = self.memory[address as usize];
         self.registers[dr as usize] = self.memory[effective_address as usize];
         self.update_flags(dr as usize);
-    }
-
-    fn and(&mut self, instr: u16) {
-        todo!(
-            "{}",
-            format!("Instruction AND ({:#x}) not implemented yet.", instr)
-        );
     }
 
     fn not(&mut self, instr: u16) {
