@@ -58,7 +58,7 @@ impl VM {
             OpCode::Sti => self.sti(instr),
             OpCode::Str => self.str(instr),
             OpCode::Trap => self.trap(instr),
-            _ => self.running = false,
+            OpCode::Rti | OpCode::Res => self.abort(),
         }
     }
 
@@ -234,6 +234,12 @@ impl VM {
             format!("Instruction TRAP ({:#x}) not implemented yet.", instr)
         );
     }
+
+    fn abort(&mut self) {
+        println!("Bad Opcode!");
+        println!("Aborting the VM...");
+        self.running = false;
+    }
 }
 
 #[cfg(test)]
@@ -295,5 +301,35 @@ mod tests {
         println!("Registers after LDI: {:?}", vm.registers);
         println!("Memory after LDI: {:?}", &vm.memory[0x3000..0x3060]);
         assert_eq!(vm.registers[0], 20);
+    }
+
+    #[test]
+    fn test_rti() {
+        let mut vm = VM::new();
+        println!("Registers before RTI: {:?}", vm.registers);
+
+        // Create an RTI instruction
+        // Binary representation: 1000 0000 0000 0000
+        let instr: u16 = 0b1000_0000_0000_0000;
+
+        vm.execute(OpCode::Rti, instr);
+
+        println!("Registers after RTI: {:?}", vm.registers);
+        assert!(!vm.running);
+    }
+
+    #[test]
+    fn test_res() {
+        let mut vm = VM::new();
+        println!("Registers before RES: {:?}", vm.registers);
+
+        // Create a RES instruction
+        // Binary representation: 1110 0000 0000 0000
+        let instr: u16 = 0b1110_0000_0000_0000;
+
+        vm.execute(OpCode::Res, instr);
+
+        println!("Registers after RES: {:?}", vm.registers);
+        assert!(!vm.running);
     }
 }
