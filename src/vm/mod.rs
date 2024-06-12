@@ -385,4 +385,21 @@ mod tests {
         println!("Registers after AND: {:?}", vm.registers);
         assert_eq!(vm.registers[0], 0b1000);
     }
+
+    #[test]
+    fn test_not() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[1] = 0b1010; // SR
+        println!("Registers before NOT: {:?}", vm.registers);
+
+        // Create a NOT instruction: DR = 0, SR = 1
+        // Binary representation: 1001 000 001 111111
+        let instr: u16 = 0b1001_0000_0111_1111;
+
+        vm.not(instr);
+
+        println!("Registers after NOT: {:?}", vm.registers);
+        assert_eq!(vm.registers[0], !0b1010);
+    }
 }
