@@ -18,6 +18,14 @@ To run the virtual machine, use the following command:
 cargo run
 ```
 
+## Testing
+
+To run the tests, use the following command:
+
+```bash
+cargo test
+```
+
 ## References
 
 This project is based on the following articles and resources:

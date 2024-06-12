@@ -145,8 +145,9 @@ impl VM {
         /* PCoffset 9*/
         let pc_offset = Self::sign_extend(instr & 0x1FF, 9);
         /* add pc_offset to the current PC, look at that memory location to get the final address */
-        self.registers[dr as usize] = self.memory
-            [(self.registers[usize::from(Register::PC)].wrapping_add(pc_offset)) as usize];
+        let address = self.registers[usize::from(Register::PC)].wrapping_add(pc_offset);
+        let effective_address = self.memory[address as usize];
+        self.registers[dr as usize] = self.memory[effective_address as usize];
         self.update_flags(dr as usize);
     }
 
@@ -232,5 +233,67 @@ impl VM {
             "{}",
             format!("Instruction TRAP ({:#x}) not implemented yet.", instr)
         );
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add_register_mode() {
+        let mut vm = VM::new();
+        // Set initial values for the registers
+        vm.registers[1] = 5; // SR1
+        vm.registers[2] = 10; // SR2
+        println!("Registers before ADD: {:?}", vm.registers);
+
+        // Create an ADD instruction: DR = 0, SR1 = 1, SR2 = 2
+        // Binary representation: 0001 000 001 000 010
+        let instr: u16 = 0b0001_0000_0100_0010;
+
+        vm.add(instr);
+
+        println!("Registers after ADD: {:?}", vm.registers);
+        assert_eq!(vm.registers[0], 15);
+    }
+
+    #[test]
+    fn test_add_immediate_mode() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[1] = 5; // SR1
+        println!("Registers before ADD: {:?}", vm.registers);
+
+        // Create an ADD instruction: DR = 0, SR1 = 1, imm5 = 10
+        // Binary representation: 0001 000 001 1 01010
+        let instr: u16 = 0b0001_0000_0110_1010;
+
+        vm.add(instr);
+
+        println!("Registers after ADD: {:?}", vm.registers);
+        assert_eq!(vm.registers[0], 15);
+    }
+
+    #[test]
+    fn test_ldi() {
+        let mut vm = VM::new();
+        // Set initial value for the memory
+        vm.memory[0x3002] = 0x3050; // Memory at PC + offset (for LDI)
+        vm.memory[0x3050] = 20; // Memory at address 0x3050 (final address)
+        println!("Registers before LDI: {:?}", vm.registers);
+
+        // Set the PC to 0x3000
+        vm.registers[usize::from(Register::PC)] = 0x3000;
+
+        // Create an LDI instruction: DR = 0, PCoffset9 = 2
+        // Binary representation: 1010 000 000 000010
+        let instr: u16 = 0b1010_0000_0000_0010;
+
+        vm.ldi(instr);
+
+        println!("Registers after LDI: {:?}", vm.registers);
+        println!("Memory after LDI: {:?}", &vm.memory[0x3000..0x3060]);
+        assert_eq!(vm.registers[0], 20);
     }
 }
