@@ -325,7 +325,7 @@ mod tests {
 
         // Create a RES instruction
         // Binary representation: 1110 0000 0000 0000
-        let instr: u16 = 0b1110_0000_0000_0000;
+        let instr: u16 = 0b1101_0000_0000_0000;
 
         vm.execute(OpCode::Res, instr);
 
