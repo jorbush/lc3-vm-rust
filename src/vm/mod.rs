@@ -183,10 +183,23 @@ impl VM {
     }
 
     fn br(&mut self, instr: u16) {
-        todo!(
-            "{}",
-            format!("Instruction BR ({:#x}) not implemented yet.", instr)
-        );
+        /*
+           15 14 13 12 | 11  10  9 | 8 7 6 5 4 3 2 1 0
+               0 0 0 0 | n | z | p |  PCoffset9
+        */
+        let n = (instr >> 11) & 0x1;
+        let z = (instr >> 10) & 0x1;
+        let p = (instr >> 9) & 0x1;
+
+        if (n != 0 && self.registers[usize::from(Register::Cond)] == ConditionFlag::Neg.into())
+            || (z != 0 && self.registers[usize::from(Register::Cond)] == ConditionFlag::Zro.into())
+            || (p != 0 && self.registers[usize::from(Register::Cond)] == ConditionFlag::Pos.into())
+        {
+            let pc_offset = Self::sign_extend(instr & 0x1FF, 9);
+            let address = self.registers[usize::from(Register::PC)].wrapping_add(pc_offset);
+            let effective_address = self.memory[address as usize];
+            self.registers[usize::from(Register::PC)] = self.memory[effective_address as usize];
+        }
     }
 
     fn jmp(&mut self, instr: u16) {
