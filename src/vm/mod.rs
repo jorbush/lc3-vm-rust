@@ -204,8 +204,8 @@ impl VM {
     fn jmp(&mut self, instr: u16) {
         /*
                 15 14 13 12 | 11 10 9 | 8 7 6 | 5 4 3 2 1 0
-            JMP     1 1 0 0 | 0  0  0 | BaseR | 0 0 0 0 0
-            RET     1 1 0 0 | 0  0  0 | 1 1 1 | 0 0 0 0 0
+            JMP     1 1 0 0 | 0  0  0 | BaseR | 0 0 0 0 0 0
+            RET     1 1 0 0 | 0  0  0 | 1 1 1 | 0 0 0 0 0 0
         */
         let base_r = (instr >> 6) & 0x7;
         self.registers[usize::from(Register::PC)] = self.registers[base_r as usize];
@@ -436,6 +436,23 @@ mod tests {
 
         println!("Registers after BR: {:?}", vm.registers);
         println!("Memory after BR: {:?}", &vm.memory[0x3000..0x3002]);
+        assert_eq!(vm.registers[usize::from(Register::PC)], 0x3002);
+    }
+
+    #[test]
+    fn test_jmp() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[1] = 0x3002; // BaseR
+        println!("Registers before JMP: {:?}", vm.registers);
+
+        // Create a JMP instruction: BaseR = 1
+        // Binary representation: 1100 000 001 000000
+        let instr: u16 = 0b1100_0000_0100_0000;
+
+        vm.jmp(instr);
+
+        println!("Registers after JMP: {:?}", vm.registers);
         assert_eq!(vm.registers[usize::from(Register::PC)], 0x3002);
     }
 }
