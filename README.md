@@ -20,7 +20,7 @@ The LC-3 is a simple educational computer designed to teach the basics of comput
 | ST          | 0011             | Stores the value of a register into a memory address.               | ❌           |
 | JSR         | 0100             | Jumps to a subroutine and saves the return address.                 | ✅           |
 | AND         | 0101             | Performs a bitwise AND operation between two registers.             | ✅           |
-| LDR         | 0110             | Loads a value from a memory address calculated based on a register. | ❌           |
+| LDR         | 0110             | Loads a value from a memory address calculated based on a register. | ✅           |
 | STR         | 0111             | Stores the value of a register into a calculated memory address.    | ❌           |
 | RTI         | 1000             | Unused.                                                             | ✅           |
 | NOT         | 1001             | Performs a bitwise NOT operation on a register.                     | ✅           |
