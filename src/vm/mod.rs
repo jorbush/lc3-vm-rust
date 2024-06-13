@@ -294,10 +294,15 @@ impl VM {
     }
 
     fn str(&mut self, instr: u16) {
-        todo!(
-            "{}",
-            format!("Instruction STR ({:#x}) not implemented yet.", instr)
-        );
+        /*
+            15 14 13 12 | 11 10 9 | 8 7 6 | 5 4 3 2 1 0
+                0 1 1 1 |    SR   | BaseR | offset6
+        */
+        let sr = (instr >> 9) & 0x7;
+        let base_r = (instr >> 6) & 0x7;
+        let offset = Self::sign_extend(instr & 0x3F, 6);
+        let address = self.registers[base_r as usize].wrapping_add(offset);
+        self.memory[address as usize] = self.registers[sr as usize];
     }
 
     fn trap(&mut self, instr: u16) {
