@@ -271,10 +271,14 @@ impl VM {
     }
 
     fn st(&mut self, instr: u16) {
-        todo!(
-            "{}",
-            format!("Instruction ST ({:#x}) not implemented yet.", instr)
-        );
+        /*
+            15 14 13 12 | 11 10 9 | 8 7 6 5 4 3 2 1 0
+                0 0 1 1 |    SR   |  PCoffset9
+        */
+        let sr = (instr >> 9) & 0x7;
+        let pc_offset = Self::sign_extend(instr & 0x1FF, 9);
+        let address = self.registers[usize::from(Register::PC)].wrapping_add(pc_offset);
+        self.memory[address as usize] = self.registers[sr as usize];
     }
 
     fn sti(&mut self, instr: u16) {
