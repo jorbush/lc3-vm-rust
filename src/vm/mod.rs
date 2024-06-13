@@ -623,4 +623,24 @@ mod tests {
         println!("Memory after ST: {:?}", &vm.memory[0x3000..0x3002]);
         assert_eq!(vm.memory[0x3002], 20);
     }
+
+    #[test]
+    fn test_sti() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[0] = 20; // SR
+        vm.memory[0x3002] = 0x3050; // Memory at PC + offset (for STI)
+        vm.registers[usize::from(Register::PC)] = PC_START;
+        println!("Registers before STI: {:?}", vm.registers);
+
+        // Create a STI instruction: SR = 0, PCoffset9 = 2
+        // Binary representation: 1011 000 000 000010
+        let instr: u16 = 0b1011_0000_0000_0010;
+
+        vm.sti(instr);
+
+        println!("Registers after STI: {:?}", vm.registers);
+        println!("Memory after STI: {:?}", &vm.memory[0x3000..0x3060]);
+        assert_eq!(vm.memory[0x3050], 20);
+    }
 }
