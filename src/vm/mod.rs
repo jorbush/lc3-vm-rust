@@ -259,10 +259,15 @@ impl VM {
     }
 
     fn lea(&mut self, instr: u16) {
-        todo!(
-            "{}",
-            format!("Instruction LEA ({:#x}) not implemented yet.", instr)
-        );
+        /*
+            15 14 13 12 | 11 10 9 | 8 7 6 5 4 3 2 1 0
+                1 1 1 0 |    DR   |  PCoffset9
+        */
+        let dr = (instr >> 9) & 0x7;
+        let pc_offset = Self::sign_extend(instr & 0x1FF, 9);
+        let address = self.registers[usize::from(Register::PC)].wrapping_add(pc_offset);
+        self.registers[dr as usize] = address;
+        self.update_flags(dr as usize);
     }
 
     fn st(&mut self, instr: u16) {
