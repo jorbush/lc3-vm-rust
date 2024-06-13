@@ -455,4 +455,21 @@ mod tests {
         println!("Registers after JMP: {:?}", vm.registers);
         assert_eq!(vm.registers[usize::from(Register::PC)], 0x3002);
     }
+
+    #[test]
+    fn test_ret() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[7] = 0x4000; // R7 is the link register
+        println!("Registers before RET: {:?}", vm.registers);
+
+        // Create a RET instruction
+        // Binary representation: 1100 000 111 000000
+        let instr: u16 = 0b1100_0001_1100_0000;
+
+        vm.jmp(instr);
+
+        println!("Registers after RET: {:?}", vm.registers);
+        assert_eq!(vm.registers[usize::from(Register::PC)], 0x4000);
+    }
 }
