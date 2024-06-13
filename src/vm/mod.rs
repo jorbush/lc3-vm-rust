@@ -212,10 +212,25 @@ impl VM {
     }
 
     fn jsr(&mut self, instr: u16) {
-        todo!(
-            "{}",
-            format!("Instruction JSR ({:#x}) not implemented yet.", instr)
-        );
+        /*
+                15 14 13 12 | 11 | 10 9 8 7 6 | 5 4 3 2 1 0
+            JSR     0 1 0 0 |  1 |      PCoffset11
+            JSRR    0 1 0 0 |  0 | 0 0 | BaseR | 0 0 0 0 0 0
+        */
+        // First, the incremented PC is saved in R7.
+        // This is the linkage back to the calling routine.
+        self.registers[usize::from(Register::R7)] = self.registers[usize::from(Register::PC)];
+        let long_flag = (instr >> 11) & 0x1;
+        if long_flag != 0 {
+            // JSR
+            let long_pc_offset = Self::sign_extend(instr & 0x7FF, 11);
+            self.registers[usize::from(Register::PC)] =
+                self.registers[usize::from(Register::PC)].wrapping_add(long_pc_offset);
+        } else {
+            // JSRR
+            let base_r = (instr >> 6) & 0x7;
+            self.registers[usize::from(Register::PC)] = self.registers[base_r as usize];
+        }
     }
 
     fn ld(&mut self, instr: u16) {
