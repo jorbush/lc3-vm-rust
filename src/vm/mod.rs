@@ -578,4 +578,21 @@ mod tests {
         println!("Memory after LDR: {:?}", &vm.memory[0x3000..0x3002]);
         assert_eq!(vm.registers[0], 20);
     }
+
+    #[test]
+    fn test_lea() {
+        let mut vm = VM::new();
+        // Set initial value for the PC
+        vm.registers[usize::from(Register::PC)] = PC_START;
+        println!("Registers before LEA: {:?}", vm.registers);
+
+        // Create a LEA instruction: DR = 0, PCoffset9 = 2
+        // Binary representation: 1110 000 000 000010
+        let instr: u16 = 0b1110_0000_0000_0010;
+
+        vm.lea(instr);
+
+        println!("Registers after LEA: {:?}", vm.registers);
+        assert_eq!(vm.registers[0], 0x3002);
+    }
 }
