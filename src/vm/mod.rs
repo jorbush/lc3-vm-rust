@@ -648,4 +648,23 @@ mod tests {
         println!("Memory after STI: {:?}", &vm.memory[0x3000..0x3060]);
         assert_eq!(vm.memory[0x3050], 20);
     }
+
+    #[test]
+    fn test_str() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[0] = 20; // SR
+        vm.registers[1] = 0x3000; // BaseR
+        println!("Registers before STR: {:?}", vm.registers);
+
+        // Create a STR instruction: SR = 0, BaseR = 1, offset = 2
+        // Binary representation: 0111 000 001 000010
+        let instr: u16 = 0b0111_0000_0100_0010;
+
+        vm.str(instr);
+
+        println!("Registers after STR: {:?}", vm.registers);
+        println!("Memory after STR: {:?}", &vm.memory[0x3000..0x3002]);
+        assert_eq!(vm.memory[0x3002], 20);
+    }
 }
