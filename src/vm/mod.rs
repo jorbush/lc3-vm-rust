@@ -554,4 +554,23 @@ mod tests {
         println!("Memory after LD: {:?}", &vm.memory[0x3000..0x3002]);
         assert_eq!(vm.registers[0], 20);
     }
+
+    #[test]
+    fn test_ldr() {
+        let mut vm = VM::new();
+        // Set initial value for the memory
+        vm.memory[0x3002] = 20; // Memory at BaseR + offset (for LDR)
+        vm.registers[1] = 0x3000; // BaseR
+        println!("Registers before LDR: {:?}", vm.registers);
+
+        // Create an LDR instruction: DR = 0, BaseR = 1, offset = 2
+        // Binary representation: 0110 000 001 000010
+        let instr: u16 = 0b0110_0000_0100_0010;
+
+        vm.ldr(instr);
+
+        println!("Registers after LDR: {:?}", vm.registers);
+        println!("Memory after LDR: {:?}", &vm.memory[0x3000..0x3002]);
+        assert_eq!(vm.registers[0], 20);
+    }
 }
