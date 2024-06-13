@@ -506,4 +506,22 @@ mod tests {
         assert_eq!(vm.registers[usize::from(Register::PC)], 0x3002);
     }
 
+    #[test]
+    fn test_jsrr() {
+        let mut vm = VM::new();
+        // Set initial value for the registers
+        vm.registers[usize::from(Register::PC)] = PC_START;
+        vm.registers[1] = 0x3002; // BaseR
+        println!("Registers before JSRR: {:?}", vm.registers);
+
+        // Create a JSRR instruction: BaseR = 1
+        // Binary representation: 0100 0 00 001 000000
+        let instr: u16 = 0b0100_0000_0100_0000;
+
+        vm.jsr(instr);
+
+        println!("Registers after JSRR: {:?}", vm.registers);
+        assert_eq!(vm.registers[usize::from(Register::R7)], 0x3000);
+        assert_eq!(vm.registers[usize::from(Register::PC)], 0x3002);
+    }
 }
