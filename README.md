@@ -25,7 +25,7 @@ The LC-3 is a simple educational computer designed to teach the basics of comput
 | RTI         | 1000             | Unused.                                                             | ✅           |
 | NOT         | 1001             | Performs a bitwise NOT operation on a register.                     | ✅           |
 | LDI         | 1010             | Loads a value from an indirect memory address into a register.      | ✅           |
-| STI         | 1011             | Stores the value of a register into an indirect memory address.     | ❌           |
+| STI         | 1011             | Stores the value of a register into an indirect memory address.     | ✅           |
 | JMP         | 1100             | Jumps to the address contained in a register.                       | ✅           |
 | RES         | 1101             | Unused.                                                             | ✅           |
 | LEA         | 1110             | Loads the effective address into a register.                        | ✅           |
