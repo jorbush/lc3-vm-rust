@@ -47,6 +47,14 @@ To run the tests, use the following command:
 cargo test
 ```
 
+## Formatting
+
+To format the code, use the following command:
+
+```bash
+cargo fmt
+```
+
 ## References
 
 This project is based on the following articles and resources:
