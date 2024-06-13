@@ -415,4 +415,27 @@ mod tests {
         println!("Registers after NOT: {:?}", vm.registers);
         assert_eq!(vm.registers[0], !0b1010);
     }
+
+    #[test]
+    fn test_br() {
+        let mut vm = VM::new();
+        // Set initial value for the condition flag
+        vm.registers[usize::from(Register::Cond)] = ConditionFlag::Neg.into();
+        // Set initial value for the PC
+        vm.registers[usize::from(Register::PC)] = 0x3000;
+        // Set initial value for the memory
+        vm.memory[0x3002] = 0x3050; // Memory at PC + offset (for BR)
+        vm.memory[0x3050] = 0x4000; // Memory at address 0x3050 (final address)
+        println!("Registers before BR: {:?}", vm.registers);
+
+        // Create a BR instruction: n = 1, z = 0, p = 0, PCoffset9 = 2
+        // Binary representation: 0000 100 000 000010
+        let instr: u16 = 0b0000_1000_0000_0010;
+
+        vm.br(instr);
+
+        println!("Registers after BR: {:?}", vm.registers);
+        println!("Memory after BR: {:?}", &vm.memory[0x3000..0x3060]);
+        assert_eq!(vm.registers[usize::from(Register::PC)], 0x4000);
+    }
 }
