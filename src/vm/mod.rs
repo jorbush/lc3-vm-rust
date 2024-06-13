@@ -487,4 +487,23 @@ mod tests {
         println!("Registers after RET: {:?}", vm.registers);
         assert_eq!(vm.registers[usize::from(Register::PC)], 0x4000);
     }
+
+    #[test]
+    fn test_jsr() {
+        let mut vm = VM::new();
+        // Set initial value for the PC
+        vm.registers[usize::from(Register::PC)] = PC_START;
+        println!("Registers before JSR: {:?}", vm.registers);
+
+        // Create a JSR instruction: PCoffset11 = 2
+        // Binary representation: 0100 1 000000000010
+        let instr: u16 = 0b0100_1000_0000_0010;
+
+        vm.jsr(instr);
+
+        println!("Registers after JSR: {:?}", vm.registers);
+        assert_eq!(vm.registers[usize::from(Register::R7)], 0x3000);
+        assert_eq!(vm.registers[usize::from(Register::PC)], 0x3002);
+    }
+
 }
