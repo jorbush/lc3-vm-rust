@@ -17,7 +17,7 @@ The LC-3 is a simple educational computer designed to teach the basics of comput
 | BR          | 0000             | Performs a conditional branch based on the condition flags.         | ✅           |
 | ADD         | 0001             | Adds two values. Can use immediate mode or register mode.           | ✅           |
 | LD          | 0010             | Loads a value from a memory address into a register.                | ✅           |
-| ST          | 0011             | Stores the value of a register into a memory address.               | ❌           |
+| ST          | 0011             | Stores the value of a register into a memory address.               | ✅           |
 | JSR         | 0100             | Jumps to a subroutine and saves the return address.                 | ✅           |
 | AND         | 0101             | Performs a bitwise AND operation between two registers.             | ✅           |
 | LDR         | 0110             | Loads a value from a memory address calculated based on a register. | ✅           |
