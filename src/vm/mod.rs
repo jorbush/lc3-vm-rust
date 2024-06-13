@@ -1,10 +1,12 @@
 mod condition_flags;
 mod opcodes;
 mod registers;
+mod trap_codes;
 
 use condition_flags::*;
 use opcodes::OpCode;
 use registers::*;
+use trap_codes::TrapCode;
 
 use std::fs::File;
 use std::io::{self, Read};
@@ -306,16 +308,49 @@ impl VM {
     }
 
     fn trap(&mut self, instr: u16) {
-        todo!(
-            "{}",
-            format!("Instruction TRAP ({:#x}) not implemented yet.", instr)
-        );
+        /*
+            15 14 13 12 | 11 10 9 8 7 6 5 4 3 2 1 0
+                1 1 1 1 | 0 0 0 0 |   trapvect8
+        */
+        let trap_vect = instr & 0xFF;
+        match trap_vect.try_into().unwrap() {
+            TrapCode::Getc => self.getc(),
+            TrapCode::Out => self.out(),
+            TrapCode::Puts => self.puts(),
+            TrapCode::In => self.in_(),
+            TrapCode::Putsp => self.puts_p(),
+            TrapCode::Halt => self.halt(),
+        }
     }
 
     fn abort(&mut self) {
         println!("Bad Opcode!");
         println!("Aborting the VM...");
         self.running = false;
+    }
+
+    fn getc(&mut self) {
+        todo!("Get character from keyboard");
+    }
+
+    fn out(&mut self) {
+        todo!("Output a character");
+    }
+
+    fn puts(&mut self) {
+        todo!("Output a word string");
+    }
+
+    fn in_(&mut self) {
+        todo!("Input a string");
+    }
+
+    fn puts_p(&mut self) {
+        todo!("Output a byte string");
+    }
+
+    fn halt(&mut self) {
+        todo!("Halt the program");
     }
 }
 
