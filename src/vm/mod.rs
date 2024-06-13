@@ -529,4 +529,23 @@ mod tests {
         assert_eq!(vm.registers[usize::from(Register::R7)], 0x3000);
         assert_eq!(vm.registers[usize::from(Register::PC)], 0x3002);
     }
+
+    #[test]
+    fn test_ld() {
+        let mut vm = VM::new();
+        // Set initial value for the memory
+        vm.memory[0x3002] = 20; // Memory at PC + offset (for LD)
+        vm.registers[usize::from(Register::PC)] = PC_START;
+        println!("Registers before LD: {:?}", vm.registers);
+
+        // Create an LD instruction: DR = 0, PCoffset9 = 2
+        // Binary representation: 0010 000 000 000010
+        let instr: u16 = 0b0010_0000_0000_0010;
+
+        vm.ld(instr);
+
+        println!("Registers after LD: {:?}", vm.registers);
+        println!("Memory after LD: {:?}", &vm.memory[0x3000..0x3002]);
+        assert_eq!(vm.registers[0], 20);
+    }
 }
