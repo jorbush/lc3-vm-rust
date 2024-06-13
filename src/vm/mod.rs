@@ -190,15 +190,14 @@ impl VM {
         let n = (instr >> 11) & 0x1;
         let z = (instr >> 10) & 0x1;
         let p = (instr >> 9) & 0x1;
-
-        if (n != 0 && self.registers[usize::from(Register::Cond)] == ConditionFlag::Neg.into())
-            || (z != 0 && self.registers[usize::from(Register::Cond)] == ConditionFlag::Zro.into())
-            || (p != 0 && self.registers[usize::from(Register::Cond)] == ConditionFlag::Pos.into())
+        let cond = self.registers[usize::from(Register::Cond)];
+        if (n != 0 && cond == ConditionFlag::Neg.into())
+            || (z != 0 && cond == ConditionFlag::Zro.into())
+            || (p != 0 && cond == ConditionFlag::Pos.into())
         {
             let pc_offset = Self::sign_extend(instr & 0x1FF, 9);
-            let address = self.registers[usize::from(Register::PC)].wrapping_add(pc_offset);
-            let effective_address = self.memory[address as usize];
-            self.registers[usize::from(Register::PC)] = self.memory[effective_address as usize];
+            self.registers[usize::from(Register::PC)] =
+                self.registers[usize::from(Register::PC)].wrapping_add(pc_offset);
         }
     }
 
@@ -424,8 +423,6 @@ mod tests {
         // Set initial value for the PC
         vm.registers[usize::from(Register::PC)] = 0x3000;
         // Set initial value for the memory
-        vm.memory[0x3002] = 0x3050; // Memory at PC + offset (for BR)
-        vm.memory[0x3050] = 0x4000; // Memory at address 0x3050 (final address)
         println!("Registers before BR: {:?}", vm.registers);
 
         // Create a BR instruction: n = 1, z = 0, p = 0, PCoffset9 = 2
@@ -435,7 +432,7 @@ mod tests {
         vm.br(instr);
 
         println!("Registers after BR: {:?}", vm.registers);
-        println!("Memory after BR: {:?}", &vm.memory[0x3000..0x3060]);
-        assert_eq!(vm.registers[usize::from(Register::PC)], 0x4000);
+        println!("Memory after BR: {:?}", &vm.memory[0x3000..0x3002]);
+        assert_eq!(vm.registers[usize::from(Register::PC)], 0x3002);
     }
 }
