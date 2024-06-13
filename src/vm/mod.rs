@@ -599,4 +599,23 @@ mod tests {
         println!("Registers after LEA: {:?}", vm.registers);
         assert_eq!(vm.registers[0], 0x3002);
     }
+
+    #[test]
+    fn test_st() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[0] = 20; // SR
+        vm.registers[usize::from(Register::PC)] = PC_START;
+        println!("Registers before ST: {:?}", vm.registers);
+
+        // Create a ST instruction: SR = 0, PCoffset9 = 2
+        // Binary representation: 0011 000 000 000010
+        let instr: u16 = 0b0011_0000_0000_0010;
+
+        vm.st(instr);
+
+        println!("Registers after ST: {:?}", vm.registers);
+        println!("Memory after ST: {:?}", &vm.memory[0x3000..0x3002]);
+        assert_eq!(vm.memory[0x3002], 20);
+    }
 }
