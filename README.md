@@ -29,7 +29,7 @@ The LC-3 is a simple educational computer designed to teach the basics of comput
 | JMP         | 1100             | Jumps to the address contained in a register.                       | ✅           |
 | RES         | 1101             | Unused.                                                             | ✅           |
 | LEA         | 1110             | Loads the effective address into a register.                        | ✅           |
-| TRAP        | 1111             | Invokes an operating system routine.                                | ❌           |
+| TRAP        | 1111             | Invokes an operating system routine.                                | ✅           |
 
 ## Usage
 
