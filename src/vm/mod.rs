@@ -383,7 +383,8 @@ impl VM {
     }
 
     fn trap_halt(&mut self) {
-        todo!("Halt the program");
+        println!("Halting the VM...");
+        self.running = false;
     }
 }
 
@@ -824,4 +825,14 @@ mod tests {
         assert_eq!(&vm.memory[0x3000..0x3002], &[0x4848, 0x0000]);
     }
 
+    #[test]
+    fn test_trap_halt() {
+        let mut vm = VM::new();
+        println!("Registers before TRAP: {:?}", vm.registers);
+
+        vm.trap_halt();
+
+        println!("Registers after TRAP: {:?}", vm.registers);
+        assert!(!vm.running);
+    }
 }
