@@ -366,7 +366,20 @@ impl VM {
     }
 
     fn trap_puts_p(&mut self) {
-        todo!("Output a byte string");
+        /* one char per byte (two bytes per word)
+        here we need to swap back to
+        big endian format */
+        let mut address = self.registers[usize::from(Register::R0)];
+        while self.memory[address as usize] != 0 {
+            let c = (self.memory[address as usize] & 0xFF) as u8 as char;
+            print!("{}", c);
+            let c = (self.memory[address as usize] >> 8) as u8 as char;
+            if c != '\0' {
+                print!("{}", c);
+            }
+            address += 1;
+        }
+        println!();
     }
 
     fn trap_halt(&mut self) {
@@ -794,4 +807,21 @@ mod tests {
     //     println!("Registers after TRAP: {:?}", vm.registers);
     //     assert_eq!(vm.registers[0], 'a' as u16);
     // }
+
+    #[test]
+    fn test_trap_puts_p() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[0] = 0x3000; // R0
+        vm.memory[0x3000] = 0x4848; // "HH"
+        vm.memory[0x3001] = 0x0000; // Null-terminated string
+        println!("Registers before TRAP: {:?}", vm.registers);
+
+        vm.trap_puts_p();
+
+        println!("Registers after TRAP: {:?}", vm.registers);
+        println!("Memory after TRAP: {:?}", &vm.memory[0x3000..0x3002]);
+        assert_eq!(&vm.memory[0x3000..0x3002], &[0x4848, 0x0000]);
+    }
+
 }
