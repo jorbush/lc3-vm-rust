@@ -338,16 +338,21 @@ impl VM {
         println!();
     }
 
+    fn trap_in(&mut self) {
+        let mut buffer = String::new();
+        io::stdin().read_line(&mut buffer).unwrap();
+        let c = buffer.chars().next().unwrap();
+        let register_index = usize::from(Register::R0);
+        self.registers[register_index] = c as u16;
+        self.update_flags(register_index);
+    }
+
     fn trap_getc(&mut self) {
         todo!("Get character from keyboard");
     }
 
     fn trap_out(&mut self) {
         todo!("Output a character");
-    }
-
-    fn trap_in(&mut self) {
-        todo!("Input a string");
     }
 
     fn trap_puts_p(&mut self) {
