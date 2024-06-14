@@ -338,7 +338,7 @@ impl VM {
         println!();
     }
 
-    fn trap_in(&mut self) {
+    fn trap_getc(&mut self) {
         let mut buffer = String::new();
         io::stdin().read_line(&mut buffer).unwrap();
         let c = buffer.chars().next().unwrap();
@@ -354,8 +354,15 @@ impl VM {
         );
     }
 
-    fn trap_getc(&mut self) {
-        todo!("Get character from keyboard");
+    fn trap_in(&mut self) {
+        print!("Enter a character: ");
+        let mut buffer = String::new();
+        io::stdin().read_line(&mut buffer).unwrap();
+        let c = buffer.chars().next().unwrap();
+        println!("{}", c);
+        let register_index = usize::from(Register::R0);
+        self.registers[register_index] = c as u16;
+        self.update_flags(register_index);
     }
 
     fn trap_puts_p(&mut self) {
@@ -750,7 +757,7 @@ mod tests {
     }
 
     // #[test]
-    // fn test_trap_in() {
+    // fn test_trap_getc() {
     //     let mut vm = VM::new();
     //     // Set initial value for the register
     //     vm.registers[0] = 0x0000; // R0
@@ -774,4 +781,17 @@ mod tests {
         println!("Registers after TRAP: {:?}", vm.registers);
         assert_eq!(vm.registers[0], 'a' as u16);
     }
+
+    // #[test]
+    // fn test_trap_in() {
+    //     let mut vm = VM::new();
+    //     // Set initial value for the register
+    //     vm.registers[0] = 0x0000; // R0
+    //     println!("Registers before TRAP: {:?}", vm.registers);
+
+    //     vm.trap_in();
+
+    //     println!("Registers after TRAP: {:?}", vm.registers);
+    //     assert_eq!(vm.registers[0], 'a' as u16);
+    // }
 }
