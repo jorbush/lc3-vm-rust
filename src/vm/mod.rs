@@ -332,10 +332,10 @@ impl VM {
     fn trap_puts(&mut self) {
         let mut address = self.registers[usize::from(Register::R0)];
         while self.memory[address as usize] != 0x0000 {
-            let c = self.memory[address as usize] as u8;
-            print!("{}", c as char);
+            print!("{}", self.memory[address as usize] as u8 as char);
             address += 1;
         }
+        println!();
     }
 
     fn trap_getc(&mut self) {
@@ -706,5 +706,38 @@ mod tests {
         println!("Registers after STR: {:?}", vm.registers);
         println!("Memory after STR: {:?}", &vm.memory[0x3000..0x3002]);
         assert_eq!(vm.memory[0x3002], 20);
+    }
+
+    #[test]
+    fn test_trap_puts() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[0] = 0x3000; // R0
+        vm.memory[0x3000] = 'H' as u16;
+        vm.memory[0x3001] = 'e' as u16;
+        vm.memory[0x3002] = 'l' as u16;
+        vm.memory[0x3003] = 'l' as u16;
+        vm.memory[0x3004] = 'o' as u16;
+        vm.memory[0x3005] = ' ' as u16;
+        vm.memory[0x3006] = 'W' as u16;
+        vm.memory[0x3007] = 'o' as u16;
+        vm.memory[0x3008] = 'r' as u16;
+        vm.memory[0x3009] = 'l' as u16;
+        vm.memory[0x300A] = 'd' as u16;
+        vm.memory[0x300B] = '!' as u16;
+        vm.memory[0x300C] = 0x0000; // Null-terminated string
+        println!("Registers before TRAP: {:?}", vm.registers);
+
+        vm.trap_puts();
+
+        println!("Registers after TRAP: {:?}", vm.registers);
+        println!("Memory after TRAP: {:?}", &vm.memory[0x3000..0x300D]);
+        assert_eq!(
+            &vm.memory[0x3000..0x300D],
+            &[
+                0x0048, 0x0065, 0x006C, 0x006C, 0x006F, 0x0020, 0x0057, 0x006F, 0x0072, 0x006C,
+                0x0064, 0x0021, 0x0000
+            ]
+        );
     }
 }
