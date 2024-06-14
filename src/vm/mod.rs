@@ -347,12 +347,15 @@ impl VM {
         self.update_flags(register_index);
     }
 
-    fn trap_getc(&mut self) {
-        todo!("Get character from keyboard");
+    fn trap_out(&mut self) {
+        print!(
+            "{}",
+            self.registers[usize::from(Register::R0)] as u8 as char
+        );
     }
 
-    fn trap_out(&mut self) {
-        todo!("Output a character");
+    fn trap_getc(&mut self) {
+        todo!("Get character from keyboard");
     }
 
     fn trap_puts_p(&mut self) {
@@ -744,5 +747,31 @@ mod tests {
                 0x0064, 0x0021, 0x0000
             ]
         );
+    }
+
+    // #[test]
+    // fn test_trap_in() {
+    //     let mut vm = VM::new();
+    //     // Set initial value for the register
+    //     vm.registers[0] = 0x0000; // R0
+    //     println!("Registers before TRAP: {:?}", vm.registers);
+
+    //     vm.trap_in();
+
+    //     println!("Registers after TRAP: {:?}", vm.registers);
+    //     assert_eq!(vm.registers[0], 'a' as u16);
+    // }
+
+    #[test]
+    fn test_trap_out() {
+        let mut vm = VM::new();
+        // Set initial value for the register
+        vm.registers[0] = 'a' as u16; // R0
+        println!("Registers before TRAP: {:?}", vm.registers);
+
+        vm.trap_out();
+
+        println!("Registers after TRAP: {:?}", vm.registers);
+        assert_eq!(vm.registers[0], 'a' as u16);
     }
 }
