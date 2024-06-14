@@ -314,12 +314,12 @@ impl VM {
         */
         let trap_vect = instr & 0xFF;
         match trap_vect.try_into().unwrap() {
-            TrapCode::Getc => self.getc(),
-            TrapCode::Out => self.out(),
-            TrapCode::Puts => self.puts(),
-            TrapCode::In => self.in_(),
-            TrapCode::Putsp => self.puts_p(),
-            TrapCode::Halt => self.halt(),
+            TrapCode::Getc => self.trap_getc(),
+            TrapCode::Out => self.trap_out(),
+            TrapCode::Puts => self.trap_puts(),
+            TrapCode::In => self.trap_in(),
+            TrapCode::Putsp => self.trap_puts_p(),
+            TrapCode::Halt => self.trap_halt(),
         }
     }
 
@@ -329,27 +329,32 @@ impl VM {
         self.running = false;
     }
 
-    fn getc(&mut self) {
+    fn trap_puts(&mut self) {
+        let mut address = self.registers[usize::from(Register::R0)];
+        while self.memory[address as usize] != 0x0000 {
+            let c = self.memory[address as usize] as u8;
+            print!("{}", c as char);
+            address += 1;
+        }
+    }
+
+    fn trap_getc(&mut self) {
         todo!("Get character from keyboard");
     }
 
-    fn out(&mut self) {
+    fn trap_out(&mut self) {
         todo!("Output a character");
     }
 
-    fn puts(&mut self) {
-        todo!("Output a word string");
-    }
-
-    fn in_(&mut self) {
+    fn trap_in(&mut self) {
         todo!("Input a string");
     }
 
-    fn puts_p(&mut self) {
+    fn trap_puts_p(&mut self) {
         todo!("Output a byte string");
     }
 
-    fn halt(&mut self) {
+    fn trap_halt(&mut self) {
         todo!("Halt the program");
     }
 }
