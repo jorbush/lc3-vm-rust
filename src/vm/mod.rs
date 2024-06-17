@@ -41,6 +41,10 @@ impl VM {
         OpCode::try_from(instr >> 12).unwrap()
     }
 
+    fn fetch(&self) -> u16 {
+        self.mem_read(self.registers[usize::from(Register::PC)])
+    }
+
     fn execute(&mut self, op: OpCode, instr: u16) {
         match op {
             OpCode::Add => self.add(instr),
@@ -63,7 +67,7 @@ impl VM {
 
     pub fn run(&mut self) {
         while self.running {
-            let instr: u16 = self.mem_read(Register::PC.into());
+            let instr: u16 = self.fetch();
             self.registers[usize::from(Register::PC)] += 1;
             let op = Self::decode(instr);
             self.execute(op, instr);
@@ -371,23 +375,22 @@ impl VM {
         self.running = false;
     }
 
-    fn swap16(x: u16) -> u16 {
-        (x << 8) | (x >> 8)
-    }
-
     fn read_image_file(&mut self, file: &mut std::fs::File) -> std::io::Result<()> {
         // Read the origin address
         let mut origin_buf = [0; 2];
         file.read_exact(&mut origin_buf)?;
         let origin = u16::from_be_bytes(origin_buf) as usize;
+
         // Read the file content into memory
         let max_read = MEMORY_SIZE - origin;
         let mut buffer = vec![0; max_read * 2];
         let bytes_read = file.read(&mut buffer)?;
+
         // Convert and copy the data into memory
         for i in 0..(bytes_read / 2) {
-            let word = Self::swap16(u16::from_be_bytes([buffer[2 * i], buffer[2 * i + 1]]));
-            self.mem_write((origin + i).try_into().unwrap(), word);
+            // let word = Self::swap16(u16::from_be_bytes([buffer[2 * i], buffer[2 * i + 1]]));
+            let word = u16::from_be_bytes([buffer[2 * i], buffer[2 * i + 1]]);
+            self.mem_write(origin + i, word);
         }
         Ok(())
     }
@@ -397,8 +400,8 @@ impl VM {
         self.read_image_file(&mut file)
     }
 
-    fn mem_write(&mut self, address: u16, value: u16) {
-        self.memory[address as usize] = value;
+    fn mem_write(&mut self, address: usize, value: u16) {
+        self.memory[address] = value;
     }
 
     fn mem_read(&self, address: u16) -> u16 {
@@ -876,7 +879,7 @@ mod tests {
         let mut vm = VM::new();
 
         // Create a test file with appropriate data
-        let mut file = File::create("test.img").unwrap();
+        let mut file = File::create("test.obj").unwrap();
         let data: [u8; 6] = [
             0x30, 0x00, // Origin address in big-endian (0x3000)
             0x34, 0x12, // First data
@@ -885,11 +888,11 @@ mod tests {
         file.write_all(&data).unwrap();
 
         // Read the image file and load the data into VM memory
-        vm.read_image("test.img").expect("Failed to read image");
+        vm.read_image("test.obj").expect("Failed to read image");
 
         // Verify that the data was correctly loaded into memory
-        assert_eq!(vm.memory[0x3000], 0x1234);
-        assert_eq!(vm.memory[0x3001], 0x5678);
+        assert_eq!(vm.memory[0x3000], 0x3412);
+        assert_eq!(vm.memory[0x3001], 0x7856);
     }
 
     #[test]
