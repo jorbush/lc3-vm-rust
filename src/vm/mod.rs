@@ -920,4 +920,20 @@ mod tests {
         println!("Memory after write: {:?}", &vm.memory[0x3000..0x3001]);
         assert_eq!(vm.memory[0x3000], 0x5678);
     }
+
+    #[test]
+    fn test_mem_read_kbsr() {
+        let mut vm = VM::new();
+        // Set initial value for the memory
+        vm.memory[usize::from(MemoryMappedRegister::Kbsr)] = 0x8000;
+        println!(
+            "Memory before read: {:?}",
+            &vm.memory[MemoryMappedRegister::Kbsr.into()..]
+        );
+
+        let value = vm.mem_read(MemoryMappedRegister::Kbsr.into());
+
+        println!("Value after read: {:?}", value);
+        assert_eq!(value, 0x8000);
+    }
 }
