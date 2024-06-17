@@ -936,4 +936,33 @@ mod tests {
         println!("Value after read: {:?}", value);
         assert_eq!(value, 0x8000);
     }
+
+    // #[test]
+    // fn test_mem_read_kbddr() {
+    //     let mut vm = VM::new();
+    //     // Set initial value for the memory
+    //     vm.memory[usize::from(MemoryMappedRegister::Kbddr)] = 'a' as u16;
+    //     println!(
+    //         "Memory before read: {:?}",
+    //         &vm.memory[MemoryMappedRegister::Kbddr.into()..]
+    //     );
+
+    //     let value = vm.mem_read(MemoryMappedRegister::Kbddr.into());
+
+    //     println!("Value after read: {:?}", value);
+    //     assert_eq!(value, 'a' as u16);
+    // }
+
+    #[test]
+    fn test_mem_read() {
+        let mut vm = VM::new();
+        // Set initial value for the memory
+        vm.memory[0x3000] = 0x1234;
+        println!("Memory before read: {:?}", &vm.memory[0x3000..0x3001]);
+
+        let value = vm.mem_read(0x3000);
+
+        println!("Value after read: {:?}", value);
+        assert_eq!(value, 0x1234);
+    }
 }
