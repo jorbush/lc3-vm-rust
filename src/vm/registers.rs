@@ -53,3 +53,9 @@ impl TryFrom<usize> for Register {
         })
     }
 }
+
+impl From<Register> for u16 {
+    fn from(val: Register) -> Self {
+        val as u16
+    }
+}

@@ -10,7 +10,6 @@ use opcodes::OpCode;
 use registers::*;
 use trap_codes::TrapCode;
 
-use std::fs::File;
 use std::io::{self, Read};
 
 const MEMORY_SIZE: usize = 65536; /* 65536 locations */
@@ -36,10 +35,6 @@ impl VM {
         /* set the PC to starting position */
         vm.registers[usize::from(Register::PC)] = PC_START;
         vm
-    }
-
-    fn fetch(&self) -> u16 {
-        self.memory[self.registers[usize::from(Register::PC)] as usize]
     }
 
     fn decode(instr: u16) -> OpCode {
@@ -68,7 +63,7 @@ impl VM {
 
     pub fn run(&mut self) {
         while self.running {
-            let instr = self.fetch();
+            let instr: u16 = self.mem_read(Register::PC.into());
             self.registers[usize::from(Register::PC)] += 1;
             let op = Self::decode(instr);
             self.execute(op, instr);
@@ -76,20 +71,7 @@ impl VM {
     }
 
     pub fn load_image(&mut self, path: &str) -> io::Result<()> {
-        let mut file = File::open(path)?;
-        let mut buffer = Vec::new();
-        file.read_to_end(&mut buffer)?;
-
-        let origin = u16::from_be_bytes([buffer[0], buffer[1]]) as usize;
-        let mut memory_index = origin;
-
-        for chunk in buffer[2..].chunks(2) {
-            let value = u16::from_be_bytes([chunk[0], chunk[1]]);
-            self.memory[memory_index] = value;
-            memory_index += 1;
-        }
-
-        Ok(())
+        self.read_image(path)
     }
 
     fn sign_extend(x: u16, bit_count: u16) -> u16 {
@@ -405,7 +387,7 @@ impl VM {
         // Convert and copy the data into memory
         for i in 0..(bytes_read / 2) {
             let word = Self::swap16(u16::from_be_bytes([buffer[2 * i], buffer[2 * i + 1]]));
-            self.memory[origin + i] = word;
+            self.mem_write((origin + i).try_into().unwrap(), word);
         }
         Ok(())
     }
@@ -439,6 +421,8 @@ impl VM {
 
 #[cfg(test)]
 mod tests {
+    use std::fs::File;
+
     use io::Write;
 
     use super::*;

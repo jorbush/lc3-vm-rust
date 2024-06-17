@@ -36,7 +36,7 @@ The LC-3 is a simple educational computer designed to teach the basics of comput
 To run the virtual machine, use the following command:
 
 ```bash
-cargo run
+cargo run examples/2048.obj
 ```
 
 ## Testing
