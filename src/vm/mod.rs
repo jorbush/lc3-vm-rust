@@ -873,7 +873,7 @@ mod tests {
         let data: [u8; 6] = [
             0x30, 0x00, // Origin address in big-endian (0x3000)
             0x34, 0x12, // First data
-            0x78, 0x56  // Second data
+            0x78, 0x56, // Second data
         ];
         file.write_all(&data).unwrap();
 
