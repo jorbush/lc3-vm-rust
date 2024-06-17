@@ -1,9 +1,11 @@
 mod condition_flags;
+mod memory_mapped_registers;
 mod opcodes;
 mod registers;
 mod trap_codes;
 
 use condition_flags::*;
+use memory_mapped_registers::MemoryMappedRegister;
 use opcodes::OpCode;
 use registers::*;
 use trap_codes::TrapCode;
@@ -411,6 +413,27 @@ impl VM {
     fn read_image(&mut self, image_path: &str) -> std::io::Result<()> {
         let mut file = std::fs::File::open(image_path)?;
         self.read_image_file(&mut file)
+    }
+
+    fn mem_write(&mut self, address: u16, value: u16) {
+        self.memory[address as usize] = value;
+    }
+
+    fn mem_read(&self, address: u16) -> u16 {
+        if address == MemoryMappedRegister::Kbsr.into() {
+            if true {
+                1 << 15
+            } else {
+                0
+            }
+        } else if address == MemoryMappedRegister::Kbddr.into() {
+            // Read a character from the keyboard
+            let mut buffer = String::new();
+            io::stdin().read_line(&mut buffer).unwrap();
+            buffer.chars().next().unwrap() as u16
+        } else {
+            self.memory[address as usize]
+        }
     }
 }
 
