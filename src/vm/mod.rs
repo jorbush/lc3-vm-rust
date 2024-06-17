@@ -907,4 +907,17 @@ mod tests {
         assert_eq!(vm.memory[0x3000], 0x1234);
         assert_eq!(vm.memory[0x3001], 0x5678);
     }
+
+    #[test]
+    fn test_mem_write() {
+        let mut vm = VM::new();
+        // Set initial value for the memory
+        vm.memory[0x3000] = 0x1234;
+        println!("Memory before write: {:?}", &vm.memory[0x3000..0x3001]);
+
+        vm.mem_write(0x3000, 0x5678);
+
+        println!("Memory after write: {:?}", &vm.memory[0x3000..0x3001]);
+        assert_eq!(vm.memory[0x3000], 0x5678);
+    }
 }
