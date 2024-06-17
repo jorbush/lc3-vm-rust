@@ -386,10 +386,38 @@ impl VM {
         println!("Halting the VM...");
         self.running = false;
     }
+
+    fn swap16(x: u16) -> u16 {
+        (x << 8) | (x >> 8)
+    }
+
+    fn read_image_file(&mut self, file: &mut std::fs::File) -> std::io::Result<()> {
+        // Read the origin address
+        let mut origin_buf = [0; 2];
+        file.read_exact(&mut origin_buf)?;
+        let origin = u16::from_be_bytes(origin_buf) as usize;
+        // Read the file content into memory
+        let max_read = MEMORY_SIZE - origin;
+        let mut buffer = vec![0; max_read * 2];
+        let bytes_read = file.read(&mut buffer)?;
+        // Convert and copy the data into memory
+        for i in 0..(bytes_read / 2) {
+            let word = Self::swap16(u16::from_be_bytes([buffer[2 * i], buffer[2 * i + 1]]));
+            self.memory[origin + i] = word;
+        }
+        Ok(())
+    }
+
+    fn read_image(&mut self, image_path: &str) -> std::io::Result<()> {
+        let mut file = std::fs::File::open(image_path)?;
+        self.read_image_file(&mut file)
+    }
 }
 
 #[cfg(test)]
 mod tests {
+    use io::Write;
+
     use super::*;
 
     #[test]
@@ -834,5 +862,26 @@ mod tests {
 
         println!("Registers after TRAP: {:?}", vm.registers);
         assert!(!vm.running);
+    }
+
+    #[test]
+    fn test_read_image() {
+        let mut vm = VM::new();
+
+        // Create a test file with appropriate data
+        let mut file = File::create("test.img").unwrap();
+        let data: [u8; 6] = [
+            0x30, 0x00, // Origin address in big-endian (0x3000)
+            0x34, 0x12, // First data
+            0x78, 0x56  // Second data
+        ];
+        file.write_all(&data).unwrap();
+
+        // Read the image file and load the data into VM memory
+        vm.read_image("test.img").expect("Failed to read image");
+
+        // Verify that the data was correctly loaded into memory
+        assert_eq!(vm.memory[0x3000], 0x1234);
+        assert_eq!(vm.memory[0x3001], 0x5678);
     }
 }
