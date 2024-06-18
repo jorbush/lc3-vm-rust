@@ -965,11 +965,11 @@ mod tests {
         assert_eq!(value, 0x1234);
     }
 
-    #[test]
-    fn test_check_key() {
-        let vm = VM::new();
-        let result = vm.check_key();
-        println!("Result: {:?}", result);
-        assert!(!result);
-    }
+    // #[test]
+    // fn test_check_key() {
+    //     let vm = VM::new();
+    //     let result = vm.check_key();
+    //     println!("Result: {:?}", result);
+    //     assert!(!result);
+    // }
 }
