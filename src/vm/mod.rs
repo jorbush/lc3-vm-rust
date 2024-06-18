@@ -12,6 +12,8 @@ use trap_codes::TrapCode;
 
 use std::io::{self, Read};
 
+use crate::terminal;
+
 const MEMORY_SIZE: usize = 65536; /* 65536 locations */
 
 /* 0x3000 is the default */
@@ -300,6 +302,7 @@ impl VM {
             15 14 13 12 | 11 10 9 8 7 6 5 4 3 2 1 0
                 1 1 1 1 | 0 0 0 0 |   trapvect8
         */
+        terminal::turn_off_canonical_and_echo_modes();
         let trap_vect = instr & 0xFF;
         match trap_vect.try_into().unwrap() {
             TrapCode::Getc => self.trap_getc(),
@@ -309,6 +312,7 @@ impl VM {
             TrapCode::Putsp => self.trap_puts_p(),
             TrapCode::Halt => self.trap_halt(),
         }
+        terminal::restore_terminal_settings();
     }
 
     fn abort(&mut self) {

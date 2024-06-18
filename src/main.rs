@@ -1,9 +1,14 @@
+mod terminal;
 mod vm;
 
 use std::env;
+use terminal::spawn_control_c_handler;
+use termios::*;
 use vm::VM;
 
 fn main() {
+    terminal::spawn_control_c_handler().unwrap();
+
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
@@ -21,4 +26,7 @@ fn main() {
     }
 
     vm.run();
+
+    terminal::restore_terminal_settings();
+    println!("Shutting Down VM...");
 }
