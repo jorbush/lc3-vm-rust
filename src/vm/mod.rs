@@ -4,6 +4,7 @@ mod opcodes;
 mod registers;
 mod trap_codes;
 
+use crate::utils::terminal;
 use crate::utils::{
     getchar::get_char,
     select::{self, FdSet},
@@ -17,7 +18,6 @@ use opcodes::OpCode;
 use registers::*;
 use std::io::{self, Write};
 use trap_codes::TrapCode;
-use crate::utils::terminal;
 
 const MEMORY_SIZE: usize = 65536; /* 65536 locations */
 
@@ -363,9 +363,10 @@ impl VM {
         big endian format */
         let mut address = self.registers[usize::from(Register::R0)];
         while self.memory[address as usize] != 0x0000 {
-            let c1 = (self.memory[address as usize] & 0xFF) as u8 as char;
+            let c = self.memory[address as usize];
+            let c1 = (c & 0xFF) as u8 as char;
             print!("{}", c1);
-            let c2 = (self.memory[address as usize] >> 8) as u8 as char;
+            let c2 = (c >> 8) as u8 as char;
             if c2 != '\0' {
                 print!("{}", c2);
             }
