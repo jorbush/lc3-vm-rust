@@ -9,15 +9,14 @@ use crate::utils::{
     select::{self, FdSet},
     time::{TimeVal, TimeValLike},
 };
+use byteorder::{BigEndian, ReadBytesExt};
 use condition_flags::*;
 use libc::STDIN_FILENO;
 use memory_mapped_registers::MemoryMappedRegister;
 use opcodes::OpCode;
 use registers::*;
+use std::io::{self, Write};
 use trap_codes::TrapCode;
-
-use std::io::{self, Read, Write};
-
 use crate::utils::terminal;
 
 const MEMORY_SIZE: usize = 65536; /* 65536 locations */
@@ -383,22 +382,24 @@ impl VM {
 
     fn read_image_file(&mut self, file: &mut std::fs::File) -> std::io::Result<()> {
         // Read the origin address
-        let mut origin_buf = [0; 2];
-        file.read_exact(&mut origin_buf)?;
-        let origin = u16::from_be_bytes(origin_buf) as usize;
+        let base_address = file.read_u16::<BigEndian>()?;
+        let mut address = base_address as usize;
 
-        // Read the file content into memory
-        let max_read = MEMORY_SIZE - origin;
-        let mut buffer = vec![0; max_read * 2];
-        let bytes_read = file.read(&mut buffer)?;
-
-        // Convert and copy the data into memory
-        for i in 0..(bytes_read / 2) {
-            // let word = Self::swap16(u16::from_be_bytes([buffer[2 * i], buffer[2 * i + 1]]));
-            let word = u16::from_be_bytes([buffer[2 * i], buffer[2 * i + 1]]);
-            self.mem_write(origin + i, word);
+        loop {
+            match file.read_u16::<BigEndian>() {
+                Ok(instruction) => {
+                    self.mem_write(address, instruction);
+                    address += 1;
+                }
+                Err(e) => {
+                    return if e.kind() == std::io::ErrorKind::UnexpectedEof {
+                        Ok(())
+                    } else {
+                        Err(e)
+                    }
+                }
+            }
         }
-        Ok(())
     }
 
     fn read_image(&mut self, image_path: &str) -> std::io::Result<()> {
