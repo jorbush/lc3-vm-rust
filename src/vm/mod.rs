@@ -4,20 +4,14 @@ mod opcodes;
 mod registers;
 mod trap_codes;
 
+use crate::utils::getchar::get_char;
 use crate::utils::terminal;
-use crate::utils::{
-    getchar::get_char,
-    select::{self, FdSet},
-    time::{TimeVal, TimeValLike},
-};
 use condition_flags::*;
-use libc::STDIN_FILENO;
 use memory_mapped_registers::MemoryMappedRegister;
 use opcodes::OpCode;
 use registers::*;
-use trap_codes::TrapCode;
-
 use std::io::{self, Read, Write};
+use trap_codes::TrapCode;
 
 const MEMORY_SIZE: usize = 65536; /* 65536 locations */
 
@@ -412,7 +406,9 @@ impl VM {
 
     fn mem_read(&mut self, address: u16) -> u16 {
         if address == MemoryMappedRegister::Kbsr.into() {
-            if self.check_key() {
+            let mut buffer = [0; 1];
+            std::io::stdin().read_exact(&mut buffer).unwrap();
+            if buffer[0] != 0 {
                 self.memory[usize::from(MemoryMappedRegister::Kbsr)] = 1 << 15;
                 self.memory[usize::from(MemoryMappedRegister::Kbddr)] = get_char() as u16;
             } else {
@@ -420,17 +416,6 @@ impl VM {
             }
         }
         self.memory[address as usize]
-    }
-
-    fn check_key(&self) -> bool {
-        let mut fd = FdSet::new();
-        fd.insert(STDIN_FILENO);
-
-        let mut timeout = TimeVal::zero();
-        match select::select(1, &mut fd, None, None, &mut timeout) {
-            Ok(n) => n > 0,
-            Err(_) => false,
-        }
     }
 }
 
