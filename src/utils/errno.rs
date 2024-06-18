@@ -810,9 +810,6 @@ mod consts {
         EHWPOISON = libc::EHWPOISON,
     }
 
-    pub const EWOULDBLOCK: Errno = Errno::EAGAIN;
-    pub const EDEADLOCK: Errno = Errno::EDEADLK;
-
     pub fn from_i32(e: i32) -> Errno {
         use self::Errno::*;
 
