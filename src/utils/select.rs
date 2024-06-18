@@ -14,6 +14,7 @@ use libc::FD_SETSIZE;
 #[allow(missing_debug_implementations)]
 pub struct FdSet(libc::fd_set);
 
+#[allow(dead_code)]
 impl FdSet {
     #[allow(invalid_value)]
     pub fn new() -> FdSet {
