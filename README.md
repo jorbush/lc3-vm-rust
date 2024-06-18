@@ -44,7 +44,7 @@ cargo run examples/2048.obj
 To run the tests, use the following command:
 
 ```bash
-cargo test
+cargo test vm
 ```
 
 ## Formatting
