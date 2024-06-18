@@ -163,8 +163,8 @@ impl VM {
         let pc_offset = Self::sign_extend(instr & 0x1FF, 9);
         /* add pc_offset to the current PC, look at that memory location to get the final address */
         let address = self.registers[usize::from(Register::PC)].wrapping_add(pc_offset);
-        let effective_address = self.memory[address as usize];
-        self.registers[dr as usize] = self.memory[effective_address as usize];
+        let effective_address = self.mem_read(address);
+        self.registers[dr as usize] = self.mem_read(effective_address);
         self.update_flags(dr as usize);
     }
 
