@@ -33,10 +33,74 @@ The LC-3 is a simple educational computer designed to teach the basics of comput
 
 ## Usage
 
-To run the virtual machine, use the following command:
+You can play two games that are implemented with this VM: `2048` and `rogue`.
+
+### 2048
+
+To play the `2048` game, use the following command:
 
 ```bash
 cargo run examples/2048.obj
+```
+
+The output should look like this:
+
+```
+Control the game using WASD keys.
+Are you on an ANSI terminal (y/n)?
+y
+ +--------------------------+
+ |                          |
+ |                          |
+ |                          |
+ |                     2    |
+ |                          |
+ |   2                      |
+ |                          |
+ |                          |
+ |                          |
+ +--------------------------+
+```
+> [!NOTE]
+> You need to press `Enter` before typing `y` or `n` to start the game and press `Enter` again to start playing.
+
+### Rogue
+
+To play the `rogue` game, use the following command:
+
+```bash
+cargo run examples/rogue.obj
+```
+
+The output should look like this:
+
+```
+MacBook-Pro-2:lc3_vm jordi$ cargo run examples/rogue.obj
+   Compiling lc3_vm v0.1.0 (/Users/jordi/dev/lc3_vm)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running `target/debug/lc3_vm examples/rogue.obj`
+Welcome to LC3 Rogue.
+Use WSAD to move.
+Press any key..
+```
+And then you can start playing the game.
+```
+##################  ############
+###################     ########
+#######################        #
+########################  #  #
+###############################D
+################################
+################################
+@ ##############################
+#  #############################
+##    ##########################
+#####  #########################
+######  ########################
+#######   ######################
+#########    ###################
+############  ##  ##############
+#############      #############
 ```
 
 ## Testing
@@ -44,7 +108,7 @@ cargo run examples/2048.obj
 To run the tests, use the following command:
 
 ```bash
-cargo test vm
+cargo test
 ```
 
 ## Formatting
