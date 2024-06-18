@@ -62,7 +62,7 @@ y
  +--------------------------+
 ```
 > [!NOTE]
-> You need to press `Enter` before typing `y` or `n` to start the game and press `Enter` again to start playing.
+> You need to press `Enter` before typing `y` or `n` and press `Enter` again to start playing.
 
 ### Rogue
 
