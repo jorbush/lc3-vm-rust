@@ -16,7 +16,7 @@ use opcodes::OpCode;
 use registers::*;
 use trap_codes::TrapCode;
 
-use std::io::{self, Read};
+use std::io::{self, Read, Write};
 
 use crate::utils::terminal;
 
@@ -327,21 +327,9 @@ impl VM {
         self.running = false;
     }
 
-    fn trap_puts(&mut self) {
-        let mut address = self.registers[usize::from(Register::R0)];
-        while self.memory[address as usize] != 0x0000 {
-            print!("{}", self.memory[address as usize] as u8 as char);
-            address += 1;
-        }
-        println!();
-    }
-
     fn trap_getc(&mut self) {
-        let mut buffer = String::new();
-        io::stdin().read_line(&mut buffer).unwrap();
-        let c = buffer.chars().next().unwrap();
         let register_index = usize::from(Register::R0);
-        self.registers[register_index] = c as u16;
+        self.registers[register_index] = get_char() as u16;
         self.update_flags(register_index);
     }
 
@@ -350,16 +338,23 @@ impl VM {
             "{}",
             self.registers[usize::from(Register::R0)] as u8 as char
         );
+        io::stdout().flush().expect("Flushed.");
+    }
+
+    fn trap_puts(&mut self) {
+        let mut address = self.registers[usize::from(Register::R0)];
+        while self.memory[address as usize] != 0x0000 {
+            print!("{}", self.memory[address as usize] as u8 as char);
+            address += 1;
+        }
+        io::stdout().flush().expect("Flushed.");
     }
 
     fn trap_in(&mut self) {
         print!("Enter a character: ");
-        let mut buffer = String::new();
-        io::stdin().read_line(&mut buffer).unwrap();
-        let c = buffer.chars().next().unwrap();
-        println!("{}", c);
+        io::stdout().flush().expect("Flushed.");
         let register_index = usize::from(Register::R0);
-        self.registers[register_index] = c as u16;
+        self.registers[register_index] = get_char() as u16;
         self.update_flags(register_index);
     }
 
@@ -368,21 +363,22 @@ impl VM {
         here we need to swap back to
         big endian format */
         let mut address = self.registers[usize::from(Register::R0)];
-        while self.memory[address as usize] != 0 {
-            let c = (self.memory[address as usize] & 0xFF) as u8 as char;
-            print!("{}", c);
-            let c = (self.memory[address as usize] >> 8) as u8 as char;
-            if c != '\0' {
-                print!("{}", c);
+        while self.memory[address as usize] != 0x0000 {
+            let c1 = (self.memory[address as usize] & 0xFF) as u8 as char;
+            print!("{}", c1);
+            let c2 = (self.memory[address as usize] >> 8) as u8 as char;
+            if c2 != '\0' {
+                print!("{}", c2);
             }
             address += 1;
         }
-        println!();
+        io::stdout().flush().expect("Flushed.");
     }
 
     fn trap_halt(&mut self) {
         println!("Halting the VM...");
         self.running = false;
+        io::stdout().flush().expect("Flushed.");
     }
 
     fn read_image_file(&mut self, file: &mut std::fs::File) -> std::io::Result<()> {
