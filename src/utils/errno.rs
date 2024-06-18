@@ -1071,11 +1071,6 @@ mod consts {
         EQFULL = libc::EQFULL,
     }
 
-    pub const ELAST: Errno = Errno::EQFULL;
-    pub const EWOULDBLOCK: Errno = Errno::EAGAIN;
-    pub const EDEADLOCK: Errno = Errno::EDEADLK;
-
-    pub const EL2NSYNC: Errno = Errno::UnknownErrno;
 
     pub fn from_i32(e: i32) -> Errno {
         use self::Errno::*;

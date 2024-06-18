@@ -426,7 +426,7 @@ impl VM {
         let mut fd = FdSet::new();
         fd.insert(STDIN_FILENO);
 
-        let mut timeout = TimeVal::seconds(0);
+        let mut timeout = TimeVal::zero();
         match select::select(1, &mut fd, None, None, &mut timeout) {
             Ok(n) => n > 0,
             Err(_) => false,

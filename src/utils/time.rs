@@ -2,6 +2,7 @@ use libc::{c_long, timespec, timeval};
 use libc::{suseconds_t, time_t};
 use std::{cmp, fmt, ops};
 
+#[allow(dead_code)]
 pub trait TimeValLike: Sized {
     #[inline]
     fn zero() -> Self {

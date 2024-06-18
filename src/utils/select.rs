@@ -15,6 +15,7 @@ use libc::FD_SETSIZE;
 pub struct FdSet(libc::fd_set);
 
 impl FdSet {
+    #[allow(invalid_value)]
     pub fn new() -> FdSet {
         let mut fdset = unsafe { mem::MaybeUninit::uninit().assume_init() };
         unsafe { libc::FD_ZERO(&mut fdset) };
