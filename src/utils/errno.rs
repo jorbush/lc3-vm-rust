@@ -1071,7 +1071,6 @@ mod consts {
         EQFULL = libc::EQFULL,
     }
 
-
     pub fn from_i32(e: i32) -> Errno {
         use self::Errno::*;
 
