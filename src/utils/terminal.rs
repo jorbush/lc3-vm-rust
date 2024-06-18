@@ -26,7 +26,7 @@ pub fn turn_off_canonical_and_echo_modes() {
 }
 
 pub fn spawn_control_c_handler() -> Result<(), Box<dyn Error>> {
-    let signals = Signals::new(&[SIGINT])?;
+    let signals = Signals::new([SIGINT])?;
     thread::spawn(move || {
         for sig in signals.forever() {
             handle_control_c(sig);

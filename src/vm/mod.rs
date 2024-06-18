@@ -4,14 +4,22 @@ mod opcodes;
 mod registers;
 mod trap_codes;
 
-use crate::utils::getchar::get_char;
 use crate::utils::terminal;
 use condition_flags::*;
+use libc::c_int;
 use memory_mapped_registers::MemoryMappedRegister;
 use opcodes::OpCode;
 use registers::*;
 use std::io::{self, Read, Write};
 use trap_codes::TrapCode;
+
+extern "C" {
+    fn getchar() -> c_int;
+}
+
+pub fn get_char() -> i32 {
+    unsafe { getchar() }
+}
 
 const MEMORY_SIZE: usize = 65536; /* 65536 locations */
 

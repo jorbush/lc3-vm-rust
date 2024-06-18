@@ -75,10 +75,6 @@ cargo run examples/rogue.obj
 The output should look like this:
 
 ```
-MacBook-Pro-2:lc3_vm jordi$ cargo run examples/rogue.obj
-   Compiling lc3_vm v0.1.0 (/Users/jordi/dev/lc3_vm)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
-     Running `target/debug/lc3_vm examples/rogue.obj`
 Welcome to LC3 Rogue.
 Use WSAD to move.
 Press any key..
